@@ -30,7 +30,7 @@ class MailService {
       });
 
       const mailOptions = {
-        from: `"MyApp" <${process.env.SMTP_USER}>`, // From field to‘g‘ri formatda
+        from: `"Telegram" <${process.env.SMTP_USER}>`, // From field to‘g‘ri formatda
         to,
         subject: `OTP for verification - ${new Date().toLocaleString()}`,
         html: `<h1>Your OTP is: <b>${otp}</b></h1><p>This code is valid for 5 minutes.</p>`,
