@@ -1,31 +1,47 @@
-import { ThemeProvider } from '@/components/providers/theme.provider';
-import './globals.css'
+import { ThemeProvider } from "@/components/providers/theme.provider";
+import "./globals.css";
 
-import type { Metadata } from 'next';
-import { Space_Grotesk } from 'next/font/google'
+import type { Metadata } from "next";
+import { Space_Grotesk } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
+import QueryProvider from "@/components/providers/query.provider";
+import SessionProvider from "@/components/providers/session.provider";
 
 const spaceGrotesk = Space_Grotesk({
-	weight: ['400', '500', '600', '700', '300'],
-	subsets: ['latin'],
-	variable: '--font-spaceGrotesk',
-})
+  weight: ["400", "500", "600", "700", "300"],
+  subsets: ["latin"],
+  variable: "--font-spaceGrotesk",
+});
 
 export const metadata: Metadata = {
-	title: 'Telegram web',
-	description: 'Telegram web application clone created by Davlatbek',
-	icons: { icon: '/logo.svg' },
-}
+  title: "Telegram web",
+  description: "Telegram web application clone created by Davlatbek",
+  icons: { icon: "/logo.svg" },
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${spaceGrotesk.variable} antialiased `} suppressHydrationWarning>
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
- 					{children}
- 				</ThemeProvider>
-      </body>
-    </html>
-  )
+    <SessionProvider>
+      <QueryProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body
+            className={`${spaceGrotesk.variable} antialiased`}
+            suppressHydrationWarning
+          >
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <main>{children}</main>
+              <Toaster />
+            </ThemeProvider>
+          </body>
+        </html>
+      </QueryProvider>
+    </SessionProvider>
+  );
 }

@@ -4,10 +4,14 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/use-auth'
 import { emailSchema } from '@/lib/validation'
+import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { axiosClient } from '@/http/axios'
+import { toast } from 'sonner'
+import { IError } from '@/types'
 
 const SignIn = () => {
 	const { setEmail, setStep } = useAuth()
@@ -17,11 +21,28 @@ const SignIn = () => {
 		defaultValues: { email: '' },
 	})
 
+	const { mutate, isPending } = useMutation({
+		mutationFn: async (email: string) => {
+			const { data } = await axiosClient.post<{ email: string }>('/api/auth/login', { email })
+			return data
+		},
+		onSuccess: res => {
+			setEmail(res.email)
+			setStep('verify')
+			toast('Email sent')
+		},
+		onError: (error: IError) => {
+			if (error.response?.data?.message) {
+				return toast( error.response.data.message )
+			}
+			return toast('Something went wrong')
+		},
+	})
+
 	function onSubmit(values: z.infer<typeof emailSchema>) {
-		// API call to send email
-		setStep('verify')
-		setEmail(values.email)
+		mutate(values.email)
 	}
+
 
 	return (
 		<div className='w-full'>
@@ -37,13 +58,13 @@ const SignIn = () => {
 							<FormItem>
 								<Label>Email</Label>
 								<FormControl>
-									<Input placeholder='your email' className='h-10 bg-secondary' {...field} />
+									<Input placeholder='your email' disabled={isPending} className='h-10 bg-secondary' {...field} />
 								</FormControl>
 								<FormMessage className='text-xs text-red-500' />
 							</FormItem>
 						)}
 					/>
-					<Button type='submit' className='w-full' size={'lg'}>
+					<Button type='submit' className='w-full' disabled={isPending} size={'lg'}>
 						Submit
 					</Button>
 				</form>
