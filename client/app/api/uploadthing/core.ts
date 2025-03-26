@@ -14,7 +14,7 @@ export const ourFileRouter = {
 		})
 		.onUploadComplete(async ({ file }) => {
 			// Perform any necessary operations with the file here
-			console.log('Upload complete:', file);
+			// console.log('Upload complete:', file);
 			return; // Ensure the function returns void
 		}),
 } satisfies FileRouter
