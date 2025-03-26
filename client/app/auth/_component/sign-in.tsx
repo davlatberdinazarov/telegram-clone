@@ -11,7 +11,6 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { axiosClient } from '@/http/axios'
 import { toast } from 'sonner'
-import { IError } from '@/types'
 
 const SignIn = () => {
 	const { setEmail, setStep } = useAuth()
@@ -31,12 +30,7 @@ const SignIn = () => {
 			setStep('verify')
 			toast('Email sent')
 		},
-		onError: (error: IError) => {
-			if (error.response?.data?.message) {
-				return toast( error.response.data.message )
-			}
-			return toast('Something went wrong')
-		},
+
 	})
 
 	function onSubmit(values: z.infer<typeof emailSchema>) {
