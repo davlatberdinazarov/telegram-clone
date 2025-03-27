@@ -17,6 +17,7 @@ const ContactList: FC<Props> = ({ contacts }) => {
 	const [query, setQuery] = useState('')
 
 	const { onlineUsers } = useAuth()
+	console.log(onlineUsers)
 
 	const router = useRouter()
 	const { setCurrentContact, currentContact } = useCurrentContact()
