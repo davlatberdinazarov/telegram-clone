@@ -111,11 +111,9 @@ const HomePage = () => {
 			})
 
 			socket.current?.on('getNewMessage', ({ newMessage, sender, receiver }: GetSocketType) => {
-				console.log(newMessage)
-				console.log('CONTACT_ID', CONTACT_ID)
 
 				setTyping('')
-				if (CONTACT_ID === sender._id) {
+				if (CONTACT_ID === newMessage.sender._id) {
 					setMessages(prev => [...prev, newMessage])
 				}
 				setContacts(prev => {
@@ -233,6 +231,9 @@ const HomePage = () => {
 			)
 			messageForm.reset()
 			socket.current?.emit('sendMessage', { newMessage: data.newMessage, receiver: data.receiver, sender: data.sender })
+			if (!data.sender.muted) {
+				playSound(data.sender.sendingSound)
+			}
 		} catch {
 			toast('Cannot send message')
 		} finally {
@@ -349,7 +350,7 @@ const HomePage = () => {
 
 	return (
 		<>
-			<div className='w-80 h-screen border-r fixed inset-0 z-50 sidebar-custom-scrollbar overflow-y-scroll'>
+			<div className='w-80 max-md:w-16 h-screen border-r fixed inset-0 z-50'>
 				{isLoading && (
 					<div className='w-full h-[95vh] flex justify-center items-center'>
 						<Loader2 size={50} className='animate-spin' />
@@ -358,7 +359,7 @@ const HomePage = () => {
 
 				{!isLoading && <ContactList contacts={contacts} />}
 			</div>
-			<div className='pl-80 w-full'>
+			<div className='pl-80 w-full max-md:pl-16'>
 				{!currentContact?._id && <AddContact contactForm={contactForm} onCreateContact={onCreateContact} />}
 
 				{currentContact?._id && (
