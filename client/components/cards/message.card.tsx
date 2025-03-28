@@ -1,25 +1,25 @@
-import { useCurrentContact } from "@/hooks/use-current";
-import { cn } from "@/lib/utils";
-import { IMessage } from "@/types";
-import { FC } from "react";
-import { format } from "date-fns";
-import { Check, CheckCheck, Edit2, Trash } from "lucide-react";
-import { CONST } from "@/lib/constants";
+import { useCurrentContact } from '@/hooks/use-current'
+import { CONST } from '@/lib/constants'
+import { cn } from '@/lib/utils'
+import { IMessage } from '@/types'
+import { format } from 'date-fns'
+import { Check, CheckCheck, Edit2, Trash } from 'lucide-react'
+import { FC } from 'react'
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from '../ui/context-menu'
+import Image from 'next/image'
 
 interface Props {
-  message: IMessage;
-  onReaction: (reaction: string, messageId: string) => Promise<void>
- 	onDeleteMessage: (messageId: string) => Promise<void>
+	message: IMessage
+	onReaction: (reaction: string, messageId: string) => Promise<void>
+	onDeleteMessage: (messageId: string) => Promise<void>
 }
-
 const MessageCard: FC<Props> = ({ message, onReaction, onDeleteMessage }) => {
-  const { currentContact, setEditedMessage } = useCurrentContact()
+	const { currentContact, setEditedMessage } = useCurrentContact()
 
-  const reactions = ['👍', '😂', '❤️', '😍', '👎']
+	const reactions = ['👍', '😂', '❤️', '😍', '👎']
 
-  return (
-<ContextMenu>
+	return (
+		<ContextMenu>
 			<ContextMenuTrigger asChild>
 				<div
 					className={cn(
@@ -33,7 +33,8 @@ const MessageCard: FC<Props> = ({ message, onReaction, onDeleteMessage }) => {
 							message.receiver._id === currentContact?._id ? 'bg-primary' : 'bg-secondary'
 						)}
 					>
-						<p className='text-sm text-white'>{message.text}</p>
+						{message.image && <Image src={message.image} alt={message.image} width={200} height={150} />}
+						{message.text.length > 0 && <p className='text-sm text-white'>{message.text}</p>}
 						<div className='right-1 bottom-0 absolute opacity-60 text-[9px] flex gap-[3px]'>
 							<p>{format(message.updatedAt, 'hh:mm')}</p>
 							<div className='self-end'>
@@ -64,10 +65,12 @@ const MessageCard: FC<Props> = ({ message, onReaction, onDeleteMessage }) => {
 				{message.sender._id !== currentContact?._id && (
 					<>
 						<ContextMenuSeparator />
-						<ContextMenuItem className='cursor-pointer' onClick={() => setEditedMessage(message)}>
-							<Edit2 size={14} className='mr-2' />
-							<span>Edit</span>
-						</ContextMenuItem>
+						{!message.image && (
+							<ContextMenuItem className='cursor-pointer' onClick={() => setEditedMessage(message)}>
+								<Edit2 size={14} className='mr-2' />
+								<span>Edit</span>
+							</ContextMenuItem>
+						)}
 						<ContextMenuItem className='cursor-pointer' onClick={() => onDeleteMessage(message._id)}>
 							<Trash size={14} className='mr-2' />
 							<span>Delete</span>
@@ -76,7 +79,7 @@ const MessageCard: FC<Props> = ({ message, onReaction, onDeleteMessage }) => {
 				)}
 			</ContextMenuContent>
 		</ContextMenu>
-  );
-};
+	)
+}
 
-export default MessageCard;
+export default MessageCard
