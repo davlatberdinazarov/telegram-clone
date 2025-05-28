@@ -53,7 +53,7 @@ const Verify = () => {
 							<FormItem>
 								<Label>Email</Label>
 								<FormControl>
-									<Input placeholder='info@sammi.ac' disabled className='h-10 bg-secondary' {...field} />
+									<Input placeholder='youremail@email.com' disabled className='h-10 bg-secondary' {...field} />
 								</FormControl>
 								<FormMessage className='text-xs text-red-500' />
 							</FormItem>

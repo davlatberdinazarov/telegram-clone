@@ -93,7 +93,7 @@ const EmailForm = () => {
 						<FormItem>
 							<Label>Enter a new email</Label>
 							<FormControl>
-								<Input placeholder='info@sammi.ac' className='h-10 bg-secondary' disabled={otpMutation.isPending} {...field} />
+								<Input placeholder='youremail@email.com' className='h-10 bg-secondary' disabled={otpMutation.isPending} {...field} />
 							</FormControl>
 							<FormMessage className='text-xs text-red-500' />
 						</FormItem>
